@@ -3,7 +3,6 @@
 ![Static Badge](https://img.shields.io/badge/bioRxiv-10.1101%2F2024.10.22.619651-red) [![Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.14008357.svg)](https://doi.org/10.5281/zenodo.14008357)
 
 This repository hosts the source code for the experiments in the paper **"Smart Distributed Data Factory: Volunteer Computing Platform for Active Learning-Driven Molecular Dara Acquisition"**.
-The paper
 The repository provides scripts for the training and inference of energy prediction models, as well as the active-learning framework simulation.
 
 The pre-print with the detailed description of the methods and implementation is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.10.22.619651v1).\
