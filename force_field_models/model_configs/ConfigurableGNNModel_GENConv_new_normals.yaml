@@ -1,0 +1,305 @@
+id: GENConv_new_normals
+
+model_architecture: ConfigurableGNNModel
+gpu_ids: [0]
+monitor:
+
+optimizer:
+  name: Adam
+  params:
+    lr: 0.001
+lr_scheduler:
+  name: ReduceLROnPlateau
+  params:
+    mode: min
+    factor: 0.9
+    patience: 10
+    min_lr: 0.000001
+
+max_epochs: 250
+retrain_model: true
+
+seed: 12345
+monitor: valid RMSE
+best_model_name: null
+
+batch_size: 128
+criterion: L1Loss
+
+train:
+  path: <placeholder>
+  data_type: data_list
+valid:
+  path: <placeholder>
+  data_type: data_list
+test:
+  path: <placeholder>
+  data_type: data_list
+
+embeddings:
+  merge_node_embeddings: cat
+  merge_edge_embeddings: cat
+  multiply_edge_weights: true
+  node_embeddings:
+    - type: EmbeddingLayer
+      params:
+        embedding_type: embedding
+        forward_argument: x
+        forward_index: 0
+        embedding_params:
+          embedding_dim: 256
+          num_embeddings: 9
+        post_processing_config:
+          type: IdenticalLayer
+      
+
+  edge_embeddings:
+    - type: EmbeddingLayer # atom-to-atom
+      params:
+        embedding_type: embedding
+        forward_argument: edge_attr
+        forward_index: 0
+        embedding_params:
+          embedding_dim: 128
+          num_embeddings: 81
+        post_processing_config:
+          type: IdenticalLayer
+
+    - type: EmbeddingLayer #bond embeddings
+      params:
+        embedding_type: embedding
+        forward_argument: edge_attr
+        forward_index: 1
+        embedding_params:
+          embedding_dim: 128
+          num_embeddings: 7
+        post_processing_config:
+          type: IdenticalLayer
+                        
+    - type: EmbeddingLayer #PPF features
+      params:
+        embedding_type: precomputed
+        forward_argument: edge_attr
+        forward_index: 2
+        size: 4
+
+        post_processing_config:
+          type: OneHotAndScale
+          distance_bounds: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4.0]
+          angle_bounds: [-3.14, -2.243, -1.346, -0.4487,  0.4487, 1.346,  2.243,  3.1415]
+          feat_func: featurize_embedding_with_relative_distance
+          
+          dist_embed_model:
+            type: Sequential
+            layers:
+              - type: Linear
+                params:
+                  in_features: 8
+                  out_features: 16
+          
+          angle_embed_model:
+            type: Sequential
+            layers:
+              - type: Linear
+                params:
+                  in_features: 24
+                  out_features: 48
+
+models:
+  gnn_block:
+    - type: GNNBlock
+      params:
+        forward_args:
+          - x
+          - edge_index
+          - edge_attr
+        pre_gnn_layer:
+          type: IdenticalLayer
+        gnn_layer:
+          type: GENConv
+          params: 
+            in_channels: 256
+            out_channels: 1024
+            aggr: softmax
+            learn_p: true
+            learn_t: true
+            msg_norm: true
+            learn_msg_scale: true
+            edge_dim: 320
+            num_layers: 2
+        post_gnn_layer:
+          type: Sequential
+          layers:
+            - type: LayerNorm
+              params:
+                normalized_shape: 1024
+            - type: Dropout
+              params: 
+                p: 0.15
+            - type: ReLU
+
+    - type: GNNBlock
+      params:
+        forward_args:
+          - x
+          - edge_index
+          - edge_attr
+        pre_gnn_layer:
+          type: IdenticalLayer
+        gnn_layer:
+          type: GENConv
+          params: 
+            in_channels: 1024
+            out_channels: 256
+            aggr: softmax
+            learn_p: true
+            learn_t: true
+            msg_norm: true
+            learn_msg_scale: true
+            edge_dim: 320
+            num_layers: 2
+        post_gnn_layer:
+          type: IdenticalLayer
+
+  pooling_block: 
+    type: PoolingLayer  
+    params:   
+      merge_func: cat
+      forward_args:
+        - x
+        - batch
+      layers:
+        - type: global_add_pool
+  
+  energy_predictor:
+    type: Sequential
+    layers:
+      - type: Linear
+        params:
+          in_features: 256
+          out_features: 256
+      - type: LayerNorm
+        params:
+          normalized_shape: 256
+      - type: Dropout
+        params: 
+          p: 0.15
+      - type: ReLU
+      - type: Linear
+        params:
+          in_features: 256
+          out_features: 1
+
+SELF_ENERGIES_PRED:
+  H : -6.02097332e-01
+  C: -3.81008055e+01
+  N: -5.47375864e+01
+  O: -7.52024502e+01
+  S: -3.98139817e+02
+  Cl : -4.60185141e+02
+  Br : -2.57377264e+03
+  F: -9.98234301e+01
+
+ATOM_TYPE_MAP:
+  H: 0
+  C: 1
+  N: 2
+  O: 3
+  S: 4
+  Cl: 5
+  Br: 6
+  F: 7
+  <UNK>: 8
+
+BOND_TYPE_MAP:
+  SINGLE: 0
+  DOUBLE: 1
+  TRIPLE: 2
+  AROMATIC: 3
+  IONIC: 4 
+  HYDROGEN: 5 
+  UNSPECIFIED: 6
+
+ATOM_TYPE__ATOM_TYPE_MAP:
+  H_H: 0
+  H_C: 1
+  H_N: 2
+  H_O: 3
+  H_S: 4
+  H_Cl: 5
+  H_Br: 6
+  H_F: 7
+  C_H: 9
+  C_C: 10
+  C_N: 11
+  C_O: 12
+  C_S: 13
+  C_Cl: 14
+  C_Br: 15
+  C_F: 16
+  N_H: 18
+  N_C: 19
+  N_N: 20
+  N_O: 21
+  N_S: 22
+  N_Cl: 23
+  N_Br: 24
+  N_F: 25
+  O_H: 27
+  O_C: 28
+  O_N: 29
+  O_O: 30
+  O_S: 31
+  O_Cl: 32
+  O_Br: 33
+  O_F: 34
+  S_H: 36
+  S_C: 37
+  S_N: 38
+  S_O: 39
+  S_S: 40
+  S_Cl: 41
+  S_Br: 42
+  S_F: 43
+  Cl_H: 45
+  Cl_C: 46
+  Cl_N: 47
+  Cl_O: 48
+  Cl_S: 49
+  Cl_Cl: 50
+  Cl_Br: 51
+  Cl_F: 52
+  Br_H: 54
+  Br_C: 55
+  Br_N: 56
+  Br_O: 57
+  Br_S: 58
+  Br_Cl: 59
+  Br_Br: 60
+  Br_F: 61
+  F_H: 63
+  F_C: 64
+  F_N: 65
+  F_O: 66
+  F_S: 67
+  F_Cl: 68
+  F_Br: 69
+  F_F: 70
+  H_<UNK>: 8
+  C_<UNK>: 17
+  N_<UNK>: 26
+  O_<UNK>: 35
+  S_<UNK>: 44
+  Cl_<UNK>: 53
+  Br_<UNK>: 62
+  F_<UNK>: 71
+  <UNK>_H: 72
+  <UNK>_C: 73
+  <UNK>_N: 74
+  <UNK>_O: 75
+  <UNK>_S: 76
+  <UNK>_Cl: 77
+  <UNK>_Br: 78
+  <UNK>_F: 79
+  <UNK>_<UNK>: 80
+

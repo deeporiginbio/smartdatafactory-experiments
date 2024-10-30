@@ -1,0 +1,32 @@
+experiment_id: test_1
+seed: 1234
+
+buffer_size: 1000
+seed_size: 1000
+buffer_step_size: 500
+
+max_epochs: &max_epoch_value 3
+train:
+  path:  /home/shared/smart-df/EnergyDatasetH5/train
+  prefix: train
+  data_type: DatasetH5
+
+devices: &device [0]
+use_buffer_predictions: true
+
+model_ensemble_configs:
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/GENConv_TEST.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *device
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/general_conv_TEST.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *device

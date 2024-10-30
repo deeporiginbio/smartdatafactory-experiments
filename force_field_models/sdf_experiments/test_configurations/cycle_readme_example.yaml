@@ -1,0 +1,62 @@
+experiment_id: 3
+seed: 12345
+
+buffer_size: 60
+seed_size: 100
+buffer_step_size: 30
+
+train:
+  path:  null
+  prefix: null
+  data_type: EnergyDatasetNPZ
+
+use_buffer_predictions: true
+step_num: 1
+
+max_epochs: &max_epoch_value 2
+device: &gpu_device [1]
+
+model_ensemble_configs:
+
+  - model_config_path:
+      force_field_models/model_configs/ConfigurableGNNModel_GENConv_new_normals.yaml
+    continue_train: false
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *gpu_device
+
+  - model_config_path:
+      force_field_models/model_configs/ConfigurableGNNModel_GeneralConv_new_normals.yaml
+    continue_train: false
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *gpu_device
+
+  - model_config_path:
+      force_field_models/model_configs/ConfigurableGNNModel_PNAConv_new_normals.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *gpu_device
+
+  - model_config_path:
+      force_field_models/model_configs/ConfigurableGNNModel_ResGatedConv.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *gpu_device
+      
+  - model_config_path:
+      force_field_models/model_configs/ConfigurableGNNModel_TransformerConv_new_normals_1.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: *gpu_device
+
+initial_sdf_ids:
+  - 1

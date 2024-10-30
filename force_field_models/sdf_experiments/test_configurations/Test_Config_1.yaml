@@ -1,0 +1,27 @@
+experiment_id: 1
+seed: 12345
+
+buffer_size: 200000
+seed_size: 100000
+buffer_step_size: 100000
+
+train:
+  path: /home/shared/smart-df/energy_train_initial_targets.pt
+  prefix: train
+
+model_ensemble_configs:
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/GENConv.yaml
+    continue_train: true
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/GeneralConv.yaml
+    continue_train: true
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/PNAConv.yaml
+    continue_train: true
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/ResGatedGraphConv.yaml
+    continue_train: true
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/TransformerConv.yaml
+    continue_train: true

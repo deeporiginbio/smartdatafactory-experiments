@@ -1,0 +1,1 @@
+from .inference.inference_model import EnsembleForceField

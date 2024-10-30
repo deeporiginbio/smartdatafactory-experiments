@@ -1,0 +1,55 @@
+experiment_id: 2
+seed: 12345
+
+buffer_size: 200000
+seed_size: 100000
+buffer_step_size: 100000
+
+train:
+  path: /home/shared/smart-df/energy_train_initial_targets.pt
+  prefix: train
+
+step_num: 0
+
+max_epochs: &max_epoch_value 100
+model_ensemble_configs:
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/GENConv.yaml
+    continue_train: false
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: [0]
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/GeneralConv.yaml
+    continue_train: false
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: [0]
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/PNAConv.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: [0]
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/ResGatedGraphConv.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: [0]
+
+  - model_config_path:
+      /home/abughdaryan/smart_data_factory_experiments/force_field_models/model_configs/TransformerConv.yaml
+    continue_train: true
+    trainer_config: 
+      max_epochs: *max_epoch_value
+      accelerator: gpu
+      devices: [0]
