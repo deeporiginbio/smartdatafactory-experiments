@@ -5,7 +5,7 @@
 This repository hosts the source code for the experiments in the paper **"Smart Distributed Data Factory: Volunteer Computing Platform for Active Learning-Driven Molecular Dara Acquisition"**.
 The repository provides scripts for the training and inference of energy prediction models, as well as the active-learning framework simulation.
 
-The pre-print with the detailed description of the methods and implementation is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.10.22.619651v1).\
+The pre-print with the detailed description of the methods and implementation is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.10.22.619651v2).\
 The conformational energy dataset and the benchmark for machine learning models is available on [Zenodo](https://zenodo.org/records/14008357).
 
 ### Conformational energy prediction
