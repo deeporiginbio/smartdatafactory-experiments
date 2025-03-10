@@ -5,7 +5,7 @@
 This repository hosts the source code for the experiments in the paper **"Smart Distributed Data Factory: Volunteer Computing Platform for Active Learning-Driven Molecular Dara Acquisition"**.
 The repository provides scripts for the training and inference of energy prediction models, as well as the active-learning framework simulation.
 
-The pre-print with the detailed description of the methods and implementation is available on [bioRxiv](https://www.biorxiv.org/content/10.1101/2024.10.22.619651v2).\
+The [paper](https://doi.org/10.1038/s41598-025-90981-6) provides the detailed description of the methods and implementation.\
 The conformational energy dataset and the benchmark for machine learning models is available on [Zenodo](https://zenodo.org/records/14008357).
 
 ### Conformational energy prediction
@@ -40,7 +40,7 @@ A detailed explanation and an example is given in [cycle_README.md](cycle_README
 ### How to cite this work
 
 For citation please use:
-- The paper (pre-print):\
-*Ghukasyan, T., Altunyan, V., Bughdaryan, A., Aghajanyan, T., Smbatyan, K., Papoian, G. A., & Petrosyan, G. (2024). SMART DATA FACTORY: VOLUNTEER COMPUTING PLATFORM FOR ACTIVE LEARNING-DRIVEN MOLECULAR DATA ACQUISITION. bioRxiv, 2024-10.*
+- The paper:\
+*Ghukasyan, T., Altunyan, V., Bughdaryan, A., Aghajanyan, T., Smbatyan, K., Papoian, G. A., & Petrosyan, G. (2025). Smart distributed data factory volunteer computing platform for active learning-driven molecular data acquisition. Scientific Reports, 15(1), 7122.*
 - The dataset:\
 *Altunyan, V., Ghukasyan, T., Bughdaryan, A., Aghajanyan, T., Smbatyan, K., Papoian, G., & Petrosyan, G. (2024). SDDF Energy Dataset (2024-Q3) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.14008357*
